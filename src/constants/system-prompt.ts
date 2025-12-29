@@ -1,0 +1,1 @@
+export const DEFAULT_SYSTEM_PROMPT = "you are a basic math helper. user can ask you for generate numbers and multiply them."

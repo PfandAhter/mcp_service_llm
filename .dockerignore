@@ -1,0 +1,37 @@
+# ==================================
+# Docker Ignore File
+# ==================================
+
+# Dependencies
+node_modules
+npm-debug.log
+
+# Build output (we build inside container)
+dist
+
+# IDE and Editor
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Environment files (secrets should be injected via K8s secrets)
+.env
+.env.*
+
+# Documentation
+README.md
+docs
+
+# Tests
+test
+*.spec.ts
+coverage
+
+# Misc
+*.md
+!package*.json

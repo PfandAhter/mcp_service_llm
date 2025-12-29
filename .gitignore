@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files (contains secrets)
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+
+# Kubernetes (contains sensitive data - apply manually)
+k8s/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
