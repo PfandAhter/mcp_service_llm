@@ -77,8 +77,9 @@ export class ChatController {
                     content: response.text,
                 },
                 pendingRequest: response.lastToolResult?.data ? {
-                    function: response.lastToolResult.functionName, // You might need to bubble this up if available, or infer
-                    arguments: response.lastToolResult.data, // simplified mapping
+                    function: response.lastToolResult.functionName, // Tool name (e.g., 'transfer_money')
+                    arguments: response.lastToolResult.data, // Tool result (status, processCode, processMessage)
+                    originalArgs: response.lastToolResult.originalArgs, // Original tool args (amount, fromIBAN, toIBAN, etc.)
                     options: response.lastToolResult // pass full result as options for now
                 } : undefined,
                 response: {

@@ -436,10 +436,21 @@ export class ChatService implements OnModuleInit {
                 // We reverse to find the most recent one
                 const lastToolMsg = [...agnostic].reverse().find(m => m.role === 'tool');
 
+                // Find the last assistant message with tool calls to get originalArgs
+                const lastAssistantWithTools = [...agnostic].reverse().find(
+                    m => m.role === 'assistant' && m.toolCalls && m.toolCalls.length > 0
+                );
+
                 if (lastToolMsg && lastToolMsg.toolResult) {
+                    // Get the matching tool call args
+                    const matchingToolCall = lastAssistantWithTools?.toolCalls?.find(
+                        tc => tc.id === lastToolMsg.toolResult?.callId || tc.name === lastToolMsg.toolResult?.callId
+                    );
+
                     return {
                         functionName: lastToolMsg.toolResult.callId,
-                        data: lastToolMsg.toolResult.result
+                        data: lastToolMsg.toolResult.result,
+                        originalArgs: matchingToolCall?.args ?? null // Original tool arguments (amount, fromIBAN, toIBAN, etc.)
                     };
                 }
                 return null;
