@@ -186,7 +186,7 @@ export class ChatService implements OnModuleInit {
                     const data = await this.microserviceClient.sendPostRequest(
                         'transactionService',
                         '/transaction/transfer',
-                        { ...toolCall.args, isConfirmed },
+                        { ...(toolCall.args ?? {}), isConfirmed },
                         { id: context.userId || 'anonymous', email: context.metadata?.email || '' }
                     );
 
@@ -200,6 +200,7 @@ export class ChatService implements OnModuleInit {
                                 status: responseData.status,
                                 processCode: responseData.processCode,
                                 processMessage: responseData.processMessage,
+                                originalArgs: toolCall.args,
                             },
                         };
                     }
@@ -207,7 +208,10 @@ export class ChatService implements OnModuleInit {
                     return {
                         success: true,
                         message: isConfirmed ? 'Transfer completed' : 'Transfer preview generated',
-                        data,
+                        data: {
+                            ...data,
+                            originalArgs: toolCall.args,
+                        },
                     };
                 } catch (error) {
                     // Try to extract BaseResponse from HttpException (NestJS wraps the error)
