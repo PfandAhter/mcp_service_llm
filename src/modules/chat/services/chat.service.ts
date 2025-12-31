@@ -209,7 +209,7 @@ export class ChatService implements OnModuleInit {
                         success: true,
                         message: isConfirmed ? 'Transfer completed' : 'Transfer preview generated',
                         data: {
-                            ...data,
+                            ...(data as Record<string, any> ?? {}),
                             originalArgs: toolCall.args,
                         },
                     };
