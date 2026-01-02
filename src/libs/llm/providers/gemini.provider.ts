@@ -2,7 +2,7 @@
 // Google Gemini API provider implementation
 
 import { BaseLLMProvider } from './base-llm.provider';
-import { GoogleGenAI, Content } from '@google/genai';
+import { GoogleGenAI, Content, FunctionCallingConfigMode } from '@google/genai';
 import { LLMMessage, LLMResponse, ToolDefinition, LLMConfig } from '../interfaces/llm.types';
 
 /**
@@ -55,6 +55,12 @@ export class GeminiProvider extends BaseLLMProvider {
                 config: {
                     systemInstruction,
                     tools: geminiTools,
+                    // Explicitly set function calling mode to AUTO to fix empty response issue
+                    toolConfig: geminiTools ? {
+                        functionCallingConfig: {
+                            mode: FunctionCallingConfigMode.AUTO,
+                        },
+                    } : undefined,
                     temperature: this.config.temperature,
                     maxOutputTokens: this.config.maxTokens,
                     topP: this.config.topP,
@@ -180,6 +186,12 @@ export class GeminiProvider extends BaseLLMProvider {
                 config: {
                     systemInstruction,
                     tools: geminiTools,
+                    // Explicitly set function calling mode to AUTO to fix empty response issue
+                    toolConfig: geminiTools ? {
+                        functionCallingConfig: {
+                            mode: FunctionCallingConfigMode.AUTO,
+                        },
+                    } : undefined,
                     temperature: this.config.temperature,
                     maxOutputTokens: this.config.maxTokens,
                     topP: this.config.topP,

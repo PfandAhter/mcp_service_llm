@@ -21,7 +21,12 @@ Returns a list of bank names in the following structure:
 }`,
         parameters: {
             type: 'object',
-            properties: {},
+            properties: {
+                _placeholder: {
+                    type: 'string',
+                    description: 'Not used - this tool takes no parameters',
+                },
+            },
             required: [],
         },
     },
@@ -343,7 +348,12 @@ User says:
 → function: get_user_accounts()`,
         parameters: {
             type: 'object',
-            properties: {},
+            properties: {
+                _placeholder: {
+                    type: 'string',
+                    description: 'Not used - this tool takes no parameters',
+                },
+            },
             required: [],
         },
     },
