@@ -15,7 +15,7 @@ export { BUILT_IN_TOOLS } from './tools'
  */
 export const DEFAULT_LLM_CONFIG: LLMConfiguration = {
     provider: 'gemini',
-    model: 'gemini-2.5-flash',  // Changed to 2.5-flash for faster response times
+    model: 'gemini-2.0-flash',  // Changed from 2.5-flash to fix empty response issue
     parameters: {
         temperature: 0.7,  // Reduced for more consistent tool calling
         maxTokens: 8192,
