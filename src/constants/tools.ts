@@ -115,7 +115,7 @@ status, depositStatus, withdrawStatus and supportedBanks. Also include the user'
                     description: 'Optional bank name to filter ATMs',
                 },
             },
-            required: ['latitude', 'longitude', 'bankName'],
+            required: ['latitude', 'longitude'],
         },
     },
     {
