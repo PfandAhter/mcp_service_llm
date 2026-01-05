@@ -28,6 +28,38 @@ export class GeminiProvider extends BaseLLMProvider {
         this.client = new GoogleGenAI({ apiKey });
     }
 
+    /**
+     * Sanitize tool parameters for Gemini API compatibility
+     * - Removes _placeholder properties
+     * - Ensures proper parameter structure
+     * - Handles tools with no real parameters
+     */
+    private sanitizeParametersForGemini(params: any): any {
+        if (!params || typeof params !== 'object') {
+            return { type: 'object', properties: {} };
+        }
+
+        const sanitized = { ...params };
+
+        // If properties exist, filter out _placeholder
+        if (sanitized.properties && typeof sanitized.properties === 'object') {
+            const cleanProperties: Record<string, any> = {};
+            for (const [key, value] of Object.entries(sanitized.properties)) {
+                if (key !== '_placeholder') {
+                    cleanProperties[key] = value;
+                }
+            }
+            sanitized.properties = cleanProperties;
+
+            // Also filter _placeholder from required array if present
+            if (sanitized.required && Array.isArray(sanitized.required)) {
+                sanitized.required = sanitized.required.filter((r: string) => r !== '_placeholder');
+            }
+        }
+
+        return sanitized;
+    }
+
     async generateResponse(
         messages: LLMMessage[],
         systemPrompt?: string,
@@ -36,14 +68,14 @@ export class GeminiProvider extends BaseLLMProvider {
         // Prepare system instruction
         const systemInstruction = systemPrompt ? [{ text: systemPrompt }] : undefined;
 
-        // Map tools to Gemini FunctionDeclaration format
+        // Map tools to Gemini FunctionDeclaration format with sanitized parameters
         const geminiTools = tools?.length
             ? [
                 {
                     functionDeclarations: tools.map((t) => ({
                         name: t.name,
                         description: t.description,
-                        parameters: t.parameters,
+                        parameters: this.sanitizeParametersForGemini(t.parameters),
                     })),
                 },
             ]
@@ -169,7 +201,7 @@ export class GeminiProvider extends BaseLLMProvider {
                 functionDeclarations: tools.map((t) => ({
                     name: t.name,
                     description: t.description,
-                    parameters: t.parameters,
+                    parameters: this.sanitizeParametersForGemini(t.parameters),
                 }))
             }]
             : undefined;
@@ -178,6 +210,9 @@ export class GeminiProvider extends BaseLLMProvider {
         console.log(`[GeminiProvider] Sending ${tools?.length || 0} tools to Gemini`);
         if (geminiTools) {
             console.log(`[GeminiProvider] Function declarations: ${geminiTools[0].functionDeclarations.map(f => f.name).join(', ')}`);
+            // Log full tool structure for debugging
+            console.log(`[GeminiProvider] Full geminiTools structure:`);
+            console.log(JSON.stringify(geminiTools, null, 2));
         }
 
         try {
